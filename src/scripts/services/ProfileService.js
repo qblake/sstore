@@ -4,14 +4,14 @@ var Q = require('q');
 var $ = require('jquery');
 var Config = require('../lib/config');
 
-function CategoriesService() {
+function ProfileService() {
 }
 
-CategoriesService.prototype = {
-  loadCategories: function(parentId) {
+ProfileService.prototype = {
+  loadProfile: function() {
     return Q(
       $.ajax({
-        url: Config.backendHost + Config.backendApiPrefix + Config.storeId + '/categories?parent=' + parentId,
+        url: Config.backendHost + Config.backendApiPrefix + Config.storeId + '/profile',
         jsonp: 'callback',
         dataType: 'jsonp',
         success: function(response) {
@@ -22,9 +22,9 @@ CategoriesService.prototype = {
       return data;
     })
     .fail(function(data) {
-      console.error('Can\'t load categories:', data.status, data.statusText);
+      console.error('Can\'t load profile:', data.status, data.statusText);
     });
   },
 };
 
-module.exports = new CategoriesService();
+module.exports = new ProfileService();

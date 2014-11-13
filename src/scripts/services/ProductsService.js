@@ -2,6 +2,7 @@
 
 var Q = require('q');
 var $ = require('jquery');
+var Config = require('../lib/config');
 
 function ProductsService() {
 }
@@ -10,7 +11,7 @@ ProductsService.prototype = {
   loadProductsInCategory: function(categoryId) {
     return Q(
       $.ajax({
-        url: 'http://appdev.ecwid.com/api/v1/6978003/products?category=' + categoryId,
+        url: Config.backendHost + Config.backendApiPrefix + Config.storeId + '/products?category=' + categoryId,
         jsonp: 'callback',
         dataType: 'jsonp',
         success: function(response) {
@@ -27,7 +28,7 @@ ProductsService.prototype = {
   loadProduct: function(productId) {
     return Q(
       $.ajax({
-        url: 'http://appdev.ecwid.com/api/v1/6978003/product?id=' + productId,
+        url: Config.backendHost + Config.backendApiPrefix + Config.storeId + '/product?id=' + productId,
         jsonp: 'callback',
         dataType: 'jsonp',
         success: function(response) {

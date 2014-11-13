@@ -33,8 +33,13 @@ gulp.task('copy', function() {
       'src/styles/main.css',
       'bower_components/bootstrap/dist/css/bootstrap.css',
       'bower_components/bootstrap/dist/css/bootstrap.css.map',
-      ])
+    ])
     .pipe(gulp.dest('dist/assets'));
+  gulp.src([
+      'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
+      'bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
+    ])
+    .pipe(gulp.dest('dist/fonts'));
 });
 
 gulp.task('build', ['copy', 'webpack']);
