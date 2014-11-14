@@ -18,7 +18,11 @@ var ProductPage = React.createClass({
           <div className='row'>
             <div className='col-xs-12 col-md-8'>
               <p className='text-center'>
-                <img src={this.props.product.imageUrl} alt={this.props.product.name} className='img-rounded'/>
+                <img
+                  src={this.props.product.imageUrl}
+                  alt={this.props.product.name}
+                  className='img-thumbnail img-responsive'
+                />
               </p>
             </div>
             <div className='col-xs-12 col-md-4'>
@@ -92,9 +96,10 @@ var ProductPage = React.createClass({
       }
     },
     onQuantityChange: function(event) {
-      if (event.target.value < 0) return;
+      var value = parseInt(event.target.value);
+      if (value < 0) return;
       this.setState({
-        quantity: event.target.value,
+        quantity: value,
       });
     },
   },

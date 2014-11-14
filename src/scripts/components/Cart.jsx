@@ -21,18 +21,35 @@ var Cart = React.createClass({
     var items = CartStorage.getItems();
     if (_.isEmpty(items)) {
       return (
-        <div>{'No items in cart :('}</div>
+        <div>
+          <p className='text-center'> No items in cart :(</p>
+          <p className='text-center'><a href="#" onClick={this.handlers.onHomeClick.bind(this)}>Continue shopping</a></p>
+        </div>
       );
     }
     var items = _.map(items, function(item, index) {
+      var subTotal = item.product.price * item.quantity;
       return (
         <tr key={'item'+index}>
-          <td>{item.product.name}</td>
+          <td>
+            <div className='media'>
+              <div className='media-left media-middle'>
+                <img
+                  src={item.product.smallThumbnailUrl}
+                  alt={item.product.name}
+                  className='img-thumbnail img-responsive'
+                />
+              </div>
+              <div className='media-body media-middle'>
+                {item.product.name}
+              </div>
+            </div>
+          </td>
           <td>{item.product.price}</td>
           <td>
             <input type='number' className='form-control' value={item.quantity} onChange={this.handlers.onQuantityChange.bind(this, item.product)}></input>
           </td>
-          <td>{item.product.price * item.quantity}</td>
+          <td>{subTotal.toFixed(2)}</td>
           <td>
             <button type='button' className='btn btn-danger' onClick={this.handlers.onRemoveClick.bind(this, item.product)}>
               <span className='glyphicon glyphicon-trash'></span>
@@ -43,14 +60,16 @@ var Cart = React.createClass({
     }.bind(this));
     return (
       <div className='table-responsive'>
-        <table className='table table-hover'>
-          <tr>
-            <th>Product name</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Subtotal</th>
-            <th/>
-          </tr>
+        <table className='table table-hover table-condensed'>
+          <thead>
+            <tr>
+              <th>Product name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+              <th/>
+            </tr>
+          </thead>
           <tbody>
             {items}
           </tbody>
@@ -67,6 +86,11 @@ var Cart = React.createClass({
     onRemoveClick: function(product) {
       CartStorage.removeProduct(product.id);
       this.forceUpdate();
+    },
+    onHomeClick: function() {
+      if (this.props.onHomeClick) {
+        this.props.onHomeClick();
+      }
     },
   },
 

@@ -21,10 +21,9 @@ CartStorage.prototype = {
     } else {
       items.push(data);
     }
-    var data = {
+    data = JSON.stringify({
       items: items
-    };
-    data = JSON.stringify(data);
+    });
     this.storage.setItem(this.storageKey, data);
     _.each(this.onItemsCountChangeCallbacks, function(callback) {
       callback();

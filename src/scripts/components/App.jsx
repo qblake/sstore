@@ -54,17 +54,17 @@ var App = React.createClass({
     return (
       <nav className='navbar navbar-default navbar-fixed-top' role='navigation'>
         <div className='container-fluid'>
-          <div className='navbar-header'>
-            <a className='navbar-brand' href='#' onClick={this.handlers.onHomeClick.bind(this)}>{storeName}</a>
-          </div>
-          <ul className='nav navbar-nav navbar-right'>
-            <li>
-              <a href='#' onClick={this.handlers.onShowPageClick.bind(this, 'cart')}>
+          <a className='navbar-brand' href='#' onClick={this.handlers.onHomeClick.bind(this)}>
+            {storeName}
+          </a>
+          <div className='cart'>
+            <p className='navbar-text navbar-right'>
+              <a href='#' onClick={this.handlers.onShowPageClick.bind(this, 'cart')} className='navbar-link'>
                 <span className='glyphicon glyphicon-shopping-cart'> </span>
                 Shopping Cart <span className="badge">{CartStorage.getProductsCount()}</span>
               </a>
-            </li>
-          </ul>
+            </p>
+          </div>
         </div>
       </nav>
     );
@@ -91,7 +91,7 @@ var App = React.createClass({
     }.bind(this));
     return (
       <ol className='breadcrumb'>
-        <li key='home'><a href="#" onClick={this.handlers.onHomeClick.bind(this)}>Home</a></li>
+        <li key='store'><a href="#" onClick={this.handlers.onHomeClick.bind(this)}>Store</a></li>
         {crumbs}
       </ol>
     );
@@ -101,10 +101,23 @@ var App = React.createClass({
     if (!this.nowShowing('catalog')) { return; }
     return (
       <div>
+        {this.renderInfoMessage()}
         {this.renderCategories()}
         {this.renderProducts()}
       </div>
     );
+  },
+
+  renderInfoMessage: function() {
+    if (_.isEmpty(this.state.products) && _.isEmpty(this.state.categories)) {
+      return (
+        <div className=''>
+          <p className='text-center'>
+            No products in this category. <a href="#" onClick={this.handlers.onHomeClick.bind(this)}>Continue shopping</a>
+          </p>
+        </div>
+      );
+    }
   },
 
   renderCategories: function() {
@@ -122,7 +135,7 @@ var App = React.createClass({
         <div key={'product' + product.id} className='col-sm-6 col-md-3' >
           <div className='thumbnail'>
             <a href="#" className='thumbnail' onClick={handler.bind(this, product.id)}>
-              <img src={product.thumbnailUrl} alt={product.name} className='img-rounded'/>
+              <img src={product.thumbnailUrl} alt={product.name} className='img-responsive'/>
             </a>
             <div className='caption'>
               <h4><p className='text-center'>{product.name}</p></h4>
@@ -158,6 +171,7 @@ var App = React.createClass({
     if (!this.nowShowing('cart')) { return; }
     return (
       <Cart
+        onHomeClick={this.handlers.onHomeClick.bind(this)}
       />
     );
   },
