@@ -60,7 +60,7 @@ var App = React.createClass({
           </a>
           <div className='cart' onDrop={this.handlers.onDropToCart.bind(this)} onDragOver={this.handlers.onDragOverCart.bind(this)}>
             <p className='navbar-text navbar-right'>
-              <small>{'Drag product here -> '}</small>
+              <small className='hidden-xs'>{'Drag product here -> '}</small>
               <a href='#' onClick={this.handlers.onShowPageClick.bind(this, 'cart')} className='navbar-link'>
                 <span className='glyphicon glyphicon-shopping-cart'> </span>
                 Shopping Cart <span className="badge">{CartStorage.getProductsCount()}</span>
