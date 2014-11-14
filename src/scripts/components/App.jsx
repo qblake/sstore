@@ -9,6 +9,7 @@ var CartStorage = require('../storages/CartStorage');
 
 var ProductPage = require('./ProductPage.jsx');
 var Cart = require('./Cart.jsx');
+var Catalog = require('./Catalog.jsx');
 
 var _ = require('lodash');
 var Q = require('q');
@@ -101,58 +102,13 @@ var App = React.createClass({
   renderCatalog: function() {
     if (!this.nowShowing('catalog')) { return; }
     return (
-      <div>
-        {this.renderInfoMessage()}
-        {this.renderCategories()}
-        {this.renderProducts()}
-      </div>
-    );
-  },
-
-  renderInfoMessage: function() {
-    if (_.isEmpty(this.state.products) && _.isEmpty(this.state.categories)) {
-      return (
-        <div className=''>
-          <p className='text-center'>
-            No products in this category. <a href="#" onClick={this.handlers.onHomeClick.bind(this)}>Continue shopping</a>
-          </p>
-        </div>
-      );
-    }
-  },
-
-  renderCategories: function() {
-    return this.renderItems('Categories', this.state.categories, this.handlers.onCategorySelect);
-  },
-
-  renderProducts: function() {
-    var draggable = true;
-    return this.renderItems('Products', this.state.products, this.handlers.onProductSelect, draggable);
-  },
-
-  renderItems: function(label, items, handler, draggable) {
-    if (_.isEmpty(items)) return;
-    var products = _.map(items, function(product) {
-      return (
-        <div key={'product' + product.id} className='col-sm-6 col-md-3' draggable={draggable} onDragStart={this.handlers.onDragStart.bind(this, product)}>
-          <div className='thumbnail'>
-            <a href="#" className='thumbnail' onClick={handler.bind(this, product.id)}>
-              <img src={product.thumbnailUrl} alt={product.name} className='img-responsive'/>
-            </a>
-            <div className='caption'>
-              <h4><p className='text-center'>{product.name}</p></h4>
-            </div>
-          </div>
-        </div>
-      );
-    }.bind(this));
-    return (
-      <div className='panel panel-default'>
-        <div className='panel-heading'>{label}</div>
-        <div className='panel-body'>
-          {products}
-        </div>
-      </div>
+      <Catalog
+        categories={this.state.categories}
+        products={this.state.products}
+        onHomeClick={this.handlers.onHomeClick.bind(this)}
+        onCategorySelect={this.handlers.onCategorySelect.bind(this)}
+        onProductSelect={this.handlers.onProductSelect.bind(this)}
+      />
     );
   },
 
@@ -218,9 +174,6 @@ var App = React.createClass({
       this.removeBreadcrumbAfter(categoryId);
       this.loadDataInCategory(categoryId);
       this.showPage('catalog');
-    },
-    onDragStart: function(product, event) {
-      event.dataTransfer.setData('text', product.id);
     },
     onDragOverCart: function(event) {
       event.preventDefault();
