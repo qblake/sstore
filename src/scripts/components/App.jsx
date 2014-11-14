@@ -57,8 +57,9 @@ var App = React.createClass({
           <a className='navbar-brand' href='#' onClick={this.handlers.onHomeClick.bind(this)}>
             {storeName}
           </a>
-          <div className='cart'>
+          <div className='cart' onDrop={this.handlers.onDropToCart.bind(this)} onDragOver={this.handlers.onDragOverCart.bind(this)}>
             <p className='navbar-text navbar-right'>
+              <small>{'Drag product here -> '}</small>
               <a href='#' onClick={this.handlers.onShowPageClick.bind(this, 'cart')} className='navbar-link'>
                 <span className='glyphicon glyphicon-shopping-cart'> </span>
                 Shopping Cart <span className="badge">{CartStorage.getProductsCount()}</span>
@@ -125,14 +126,15 @@ var App = React.createClass({
   },
 
   renderProducts: function() {
-    return this.renderItems('Products', this.state.products, this.handlers.onProductSelect);
+    var draggable = true;
+    return this.renderItems('Products', this.state.products, this.handlers.onProductSelect, draggable);
   },
 
-  renderItems: function(label, items, handler) {
+  renderItems: function(label, items, handler, draggable) {
     if (_.isEmpty(items)) return;
     var products = _.map(items, function(product) {
       return (
-        <div key={'product' + product.id} className='col-sm-6 col-md-3' >
+        <div key={'product' + product.id} className='col-sm-6 col-md-3' draggable={draggable} onDragStart={this.handlers.onDragStart.bind(this, product)}>
           <div className='thumbnail'>
             <a href="#" className='thumbnail' onClick={handler.bind(this, product.id)}>
               <img src={product.thumbnailUrl} alt={product.name} className='img-responsive'/>
@@ -216,6 +218,22 @@ var App = React.createClass({
       this.removeBreadcrumbAfter(categoryId);
       this.loadDataInCategory(categoryId);
       this.showPage('catalog');
+    },
+    onDragStart: function(product, event) {
+      event.dataTransfer.setData('text', product.id);
+    },
+    onDragOverCart: function(event) {
+      event.preventDefault();
+    },
+    onDropToCart: function(event) {
+      event.preventDefault();
+      var productId = parseInt(event.dataTransfer.getData('text'));
+      var product = _.find(this.state.products, {id: productId});
+      if (!product) return;
+      CartStorage.addProduct({
+        product: product,
+        quantity: 1,
+      });
     },
   },
 

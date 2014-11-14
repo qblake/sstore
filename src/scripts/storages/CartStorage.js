@@ -17,7 +17,7 @@ CartStorage.prototype = {
       return item.product.id == data.product.id;
     });
     if (index > -1) {
-      items[index].quantity += data.quantity;
+      items[index].quantity += parseInt(data.quantity, 10);
     } else {
       items.push(data);
     }
@@ -38,6 +38,7 @@ CartStorage.prototype = {
     return count;
   },
   setQuantityForProduct: function(productId, quantity) {
+    quantity = parseInt(quantity, 10);
     if (quantity < 1) return;
     var items = this.getItems();
     var index = _.findIndex(items, function(item) {
